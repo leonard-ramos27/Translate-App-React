@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import LanguageButton from './LanguageButton'
+import LanguageDropdown from './LanguagesDropdown'
 
 interface translationInputFormProps {
   languages: { code: string, name: string}[],
@@ -41,28 +43,28 @@ export default function TranslationInputForm({
   return(
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="btn-original-lang-auto">
-          <input 
-            type="radio"
-            id='btn-original-lang-auto'
-            name='original-language'
-            value="auto"
-            checked={sourceLang == "auto"}
-            onChange={(e) => handleChangeSourceLang(e.target.value)} />
-          <span>Detect Language</span>
-        </label>
-        {languages.map((lang) => (
-          <label htmlFor={`btn-original-lang-${lang.code}`} key={lang.code}>
-            <input 
-              type="radio"
-              id={`btn-original-lang-${lang.code}`}
-              name='original-language'
-              value={lang.code}
-              checked={sourceLang == lang.code}
-              onChange={(e) => handleChangeSourceLang(e.target.value)} />
-            <span>{lang.name}</span>
-          </label>
+        <LanguageButton 
+          id="btn-original-lang-auto"
+          code="auto"
+          checked={sourceLang == "auto"}
+          text="Detect Language"
+          onChange={handleChangeSourceLang}/>
+        {languages.slice(0, 2).map((lang) => (
+          <LanguageButton 
+            id={`btn-original-lang-${lang.code}`}
+            code={lang.code}
+            checked={sourceLang == lang.code}
+            text={lang.name}
+            onChange={handleChangeSourceLang}
+            key={lang.code}/>
         ))}
+        {languages.length > 2 && (
+          <LanguageDropdown 
+            id='source-language'
+            value={sourceLang}
+            onChange={handleChangeSourceLang}
+            languages={languages.slice(2)}/>
+        )}
       </div>
       <textarea 
         name="original-text" 
@@ -71,6 +73,9 @@ export default function TranslationInputForm({
         ref={textRef}
         onChange={handleChangeText}></textarea>
       <div>{textLength}/500</div>
+      {textLength > 500 && (
+        <p>Text can only be up to 500 characters</p>
+      )}
       <button type='submit'>Translate</button>
     </form>
   )

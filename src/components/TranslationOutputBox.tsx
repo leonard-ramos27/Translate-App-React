@@ -1,3 +1,5 @@
+import LanguageButton from "./LanguageButton";
+import LanguageDropdown from "./LanguagesDropdown";
 
 interface translationOutputBoxProps {
     languages: { code: string, name: string}[],
@@ -17,18 +19,22 @@ export default function TranslationOutputBox({
     return (
       <div>
         <div>
-          {languages.map((lang) => (
-            <label htmlFor={`btn-translated-lang-${lang.code}`} key={lang.code}>
-              <input 
-                type="radio"
-                id={`btn-translated-lang-${lang.code}`}
-                name='translated-langugage'
-                value={lang.code}
-                checked={targetLang == lang.code}
-                onChange={(e) => handleChangeTargetLang(e.target.value)} />
-              <span>{lang.name}</span>
-            </label>
+          {languages.slice(0, 2).map((lang) => (
+            <LanguageButton  
+              id={`btn-translated-lang-${lang.code}`}
+              code={lang.code}
+              checked={targetLang == lang.code}
+              text={lang.name}
+              onChange={handleChangeTargetLang}
+              key={lang.code}/>
           ))}
+          {languages.length > 2 && (
+            <LanguageDropdown 
+              id="translated-language"
+              value={targetLang}
+              onChange={handleChangeTargetLang}
+              languages={languages.slice(2)}/>
+          )}
         </div>
         <div>{translatedText}</div>
         <button onClick={handleSwitchLang}>Switch</button>

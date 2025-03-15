@@ -7,7 +7,17 @@ import TranslationOutputBox from './components/TranslationOutputBox'
 import './App.css'
 
 const baseURL = "https://api.mymemory.translated.net/get"
-const languages = [{ code: "en", name: "English"}, { code: "fr", name: "French"}, { code: "es", name: "Spanish"}]
+const languages = [
+  { code: "en", name: "English"}, 
+  { code: "fr", name: "French"}, 
+  { code: "es", name: "Spanish"},
+  { code: "tl", name: "Tagalog"},
+  { code: "it", name: "Italian"},
+  { code: "de", name: "German"},
+  { code: "ko", name: "Korean"},
+  { code: "ja", name: "Japanese"},
+  { code: "pt", name: "Portuguese"},
+]
 
 function App() {
   const [sourceText, setSourceText] = useState("Hello, how are you?")
