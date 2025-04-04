@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import LanguageButton from './LanguageButton'
 import LanguageDropdown from './LanguagesDropdown'
+import SortAlfa from '../assets/Sort_alfa.svg'
+import SoundMaxFill from '../assets/sound_max_fill.svg'
+import Copy from '../assets/Copy.svg'
 
 interface translationInputFormProps {
   languages: { code: string, name: string}[],
@@ -41,8 +44,10 @@ export default function TranslationInputForm({
   }
   
   return(
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form 
+      onSubmit={handleSubmit} 
+      className=' border border-darkSlate rounded-3xl bg-darkOverlay p-[1.35rem] lg:p-[1.4rem] xl:flex-1'>
+      <div className=' flex flex-row flex-wrap gap-[12px]'>
         <LanguageButton 
           id="btn-original-lang-auto"
           code="auto"
@@ -66,17 +71,34 @@ export default function TranslationInputForm({
             languages={languages.slice(2)}/>
         )}
       </div>
+      <hr className=' my-[.8rem] text-darkSlate'/>
       <textarea 
         name="original-text" 
         id="original-text"
         defaultValue={defaultText}
         ref={textRef}
+        className=' py-[.6rem] text-base font-bold w-full h-[9rem] resize-none'
         onChange={handleChangeText}></textarea>
-      <div>{textLength}/500</div>
+      <div className=' text-end text-[.8rem]'>{textLength}/500</div>
       {textLength > 500 && (
         <p>Text can only be up to 500 characters</p>
       )}
-      <button type='submit'>Translate</button>
+      <div className=' flex justify-between items-center mt-[0.6rem]'>
+        <div className=' self-end flex gap-2'>
+          <button className=' border-2 border-slateGray p-[6px] rounded-xl'>
+            <img src={SoundMaxFill} alt="" />
+          </button>
+          <button className=' border-2 border-slateGray p-[6px] rounded-xl'>
+            <img src={Copy} alt="" />
+          </button>
+        </div>
+        <button 
+          type='submit'
+          className=' font-bold bg-royalBlue border border-skyBlue flex justify-between gap-2 py-[.7rem] px-[1.5rem] lg:px-[1.45rem] rounded-xl lg:mt-[1px]'>
+          <img src={SortAlfa} alt="" />
+          <span>Translate</span>
+        </button>
+      </div>
     </form>
   )
 }

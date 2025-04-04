@@ -5,6 +5,7 @@ import axios from 'axios'
 import TranslationInputForm from './components/TranslationInputForm'
 import TranslationOutputBox from './components/TranslationOutputBox'
 import './App.css'
+import Logo from './assets/logo.svg'
 
 const baseURL = "https://api.mymemory.translated.net/get"
 const languages = [
@@ -70,22 +71,26 @@ function App() {
   }, [targetLang])
 
   return (
-    <>
-      <div>translated.io</div>
-      <TranslationInputForm 
-        languages={languages}
-        sourceLang={sourceLang} 
-        defaultText={sourceText} 
-        handleUpdateSourceText={handleUpdateSourceText}
-        handleChangeSourceLang={handleChangeSourceLang} 
-        handleTranslate={handleTranslate}/>
-      <TranslationOutputBox 
-        languages={languages}
-        targetLang={targetLang}
-        handleChangeTargetLang={handleChangeTargetLang}
-        translatedText={translatedText}
-        handleSwitchLang={handleSwitchLang}/>
-    </>
+    <main className='mx-3 lg:mx-[4.5rem] my-10 lg:my-[5.7rem] text-lightGray'>
+      <div className='flex justify-center mb-[3.3rem]'>
+        <img src={Logo} alt="" />
+      </div>
+      <div className='flex flex-col xl:flex-row xl:justify-between gap-4 lg:gap-[0.8rem] xl:gap-[0.8rem]'>
+        <TranslationInputForm 
+          languages={languages}
+          sourceLang={sourceLang} 
+          defaultText={sourceText} 
+          handleUpdateSourceText={handleUpdateSourceText}
+          handleChangeSourceLang={handleChangeSourceLang} 
+          handleTranslate={handleTranslate}/>
+        <TranslationOutputBox 
+          languages={languages}
+          targetLang={targetLang}
+          handleChangeTargetLang={handleChangeTargetLang}
+          translatedText={translatedText}
+          handleSwitchLang={handleSwitchLang}/>
+      </div>
+    </main>
   )
 }
 

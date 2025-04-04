@@ -14,14 +14,17 @@ export default function LanguageButton({
     onChange
 }: LanguageButtonProps){
     return (
-        <label htmlFor={id}>
+        <label 
+            htmlFor={id}
+            className={`btn-language ${ checked ? 'selected' : '' }`}>
             <input 
               type="radio"
               id={id}
-              name='original-language'
+              name={id}
               value={code}
               checked={checked}
-              onChange={(e) => onChange(e.target.value)} />
+              onChange={(e) => onChange(e.target.value)} 
+              className="hidden"/>
             <span>{text}</span>
         </label>
     )
