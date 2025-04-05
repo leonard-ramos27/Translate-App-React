@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import LanguageButton from './LanguageButton'
 import LanguageDropdown from './LanguagesDropdown'
 import SortAlfa from '../assets/Sort_alfa.svg'
-import SoundMaxFill from '../assets/sound_max_fill.svg'
-import Copy from '../assets/Copy.svg'
+import AudioCopyControls from './AudioCopyControls'
 
 interface translationInputFormProps {
   languages: { code: string, name: string}[],
@@ -77,24 +76,19 @@ export default function TranslationInputForm({
         id="original-text"
         defaultValue={defaultText}
         ref={textRef}
-        className=' py-[.6rem] text-base font-bold w-full h-[9rem] resize-none'
+        className='py-[.6rem] text-base font-bold w-full h-[9rem] resize-none focus-visible:outline-none'
         onChange={handleChangeText}></textarea>
       <div className=' text-end text-[.8rem]'>{textLength}/500</div>
       {textLength > 500 && (
         <p>Text can only be up to 500 characters</p>
       )}
-      <div className=' flex justify-between items-center mt-[0.6rem]'>
-        <div className=' self-end flex gap-2'>
-          <button className=' border-2 border-slateGray p-[6px] rounded-xl'>
-            <img src={SoundMaxFill} alt="" />
-          </button>
-          <button className=' border-2 border-slateGray p-[6px] rounded-xl'>
-            <img src={Copy} alt="" />
-          </button>
-        </div>
+      <div className='flex justify-between items-center mt-[0.6rem]'>
+        <AudioCopyControls 
+          style='self-end' 
+          getText={() => { return textRef.current?.value.trim()} } />
         <button 
           type='submit'
-          className=' font-bold bg-royalBlue border border-skyBlue flex justify-between gap-2 py-[.7rem] px-[1.5rem] lg:px-[1.45rem] rounded-xl lg:mt-[1px]'>
+          className='font-bold bg-royalBlue border border-skyBlue flex justify-between gap-2 py-[.7rem] px-[1.5rem] lg:px-[1.45rem] rounded-xl lg:mt-[1px] cursor-pointer active:bg-royalBlue/80 transition'>
           <img src={SortAlfa} alt="" />
           <span>Translate</span>
         </button>

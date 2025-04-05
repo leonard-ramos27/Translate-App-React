@@ -1,8 +1,7 @@
 import LanguageButton from "./LanguageButton";
 import LanguageDropdown from "./LanguagesDropdown";
 import HorizontalTopLeftMain from '../assets/Horizontal_top_left_main.svg';
-import SoundMaxFill from '../assets/sound_max_fill.svg';
-import Copy from '../assets/Copy.svg';
+import AudioCopyControls from "./AudioCopyControls";
 
 interface translationOutputBoxProps {
     languages: { code: string, name: string}[],
@@ -40,20 +39,13 @@ export default function TranslationOutputBox({
           )}
           <button 
             onClick={handleSwitchLang}
-            className="ms-auto border-2 border-slateGray p-[4px] rounded-xl lg:my-[2px]">
+            className="ms-auto border-2 border-slateGray p-[4px] rounded-xl lg:my-[2px] cursor-pointer hover:scale-105 active:scale-95 transition">
             <img src={HorizontalTopLeftMain} alt="" />
           </button>
         </div>
         <hr className='my-[.9rem] text-darkSlate'/>
         <div className="py-[.6rem] text-base font-bold w-full h-[12rem]">{translatedText}</div>
-        <div className='flex gap-2'>
-          <button className='border-2 border-slateGray p-[6px] rounded-xl'>
-            <img src={SoundMaxFill} alt="" />
-          </button>
-          <button className='border-2 border-slateGray p-[6px] rounded-xl'>
-            <img src={Copy} alt="" />
-          </button>
-        </div>
+        <AudioCopyControls style='w-fit' getText={() => { return translatedText }} />
       </div>
     )
   }
