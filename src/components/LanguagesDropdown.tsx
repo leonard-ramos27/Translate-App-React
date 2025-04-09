@@ -14,23 +14,24 @@ export default function LanguageDropdown({
     languages
 }: LanguageDropdownProps){
     return (
-        <div className=" relative">
+        <div className={`relative btn-language px-0! ${languages.some(lang => value === lang.code) ? 'selected' : ''}`}>
             <select 
                 name={id} 
                 id={id}
-                className={`btn-language appearance-none pr-4! ${languages.some(lang => value === lang.code) ? 'selected' : ''}`}
-                value={value}
+                className={`bg-transparent appearance-none pl-3 pr-5 cursor-pointer focus-visible:outline-none `}
+                value={ languages.some(lang => value === lang.code) ? value : ''}
                 onChange={(e) => onChange(e.target.value)}>
+                <option value="" hidden>Spanish</option>
                 {languages.map((lang) => (
                 <option 
                     value={lang.code} 
                     key={lang.code}
-                    className="bg-deepBlack">
+                    className="bg-darkSlate">
                     {lang.name}
                 </option>
                 ))}
             </select>
-            <div className="absolute right-0.5 top-2.5">
+            <div className="absolute right-0.5 top-2.5 pointer-events-none">
                 <img src={ExpandDown} alt="" />
             </div>
         </div>
