@@ -12,12 +12,8 @@ const languages = [
   { code: "en", name: "English"}, 
   { code: "fr", name: "French"}, 
   { code: "es", name: "Spanish"},
-  // { code: "tl", name: "Tagalog"},
   { code: "it", name: "Italian"},
   { code: "de", name: "German"},
-  // { code: "ko", name: "Korean"},
-  // { code: "ja", name: "Japanese"},
-  // { code: "pt", name: "Portuguese"},
 ]
 
 function App() {
@@ -25,30 +21,45 @@ function App() {
   const [translatedText, setTranslatedText] = useState("")
   const [sourceLang, setSourceLang] = useState("en")
   const [targetLang, setTargetLang] = useState("fr")
+  const [debouncedQuery, setDebouncedQuery] = useState(sourceText)
+  const [isTranslating, setIsTranslating] = useState(false)
 
   const handleTranslate = async () => {
     try {
       let API_URL = ""
-
+      setIsTranslating(true)
       if(sourceLang == "auto") {
         const detectedLang = detect(sourceText)
         if(detectedLang === targetLang){
-          setTranslatedText(sourceText)
+          setTimeout(() => {
+            setTranslatedText(sourceText)
+            setIsTranslating(false)
+          }, 500)
         } else {
           API_URL = `${baseURL}?q=${sourceText}&langpair=${detectedLang}|${targetLang}`
         }
       } else if(sourceLang === targetLang) {
-        setTranslatedText(sourceText)
+        setTimeout(() => {
+          setTranslatedText(sourceText)
+          setIsTranslating(false)
+        }, 500)
       } else {
         API_URL = `${baseURL}?q=${sourceText}&langpair=${sourceLang}|${targetLang}`
       }
 
       if(API_URL) {
-        const response = await axios.get(API_URL)
-        response.data.responseData.match && setTranslatedText(response.data.responseData.translatedText)
+        setTimeout(async () => {
+          const response = await axios.get(API_URL)
+          response.data.responseData.match && setTranslatedText(response.data.responseData.translatedText)
+          setIsTranslating(false)
+        }, 500)
       }
     } catch (error) {
       console.log("Error with handling translate: ", error)
+      setTimeout(() => {
+        setTranslatedText("")
+        setIsTranslating(false)
+      }, 500)
     }
   }
 
@@ -70,6 +81,23 @@ function App() {
     handleTranslate()
   }, [targetLang])
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(sourceText)
+    }, 500)
+
+    return () => clearTimeout(handler)
+  }, [sourceText])
+
+  useEffect(() => {
+    if(!debouncedQuery) { 
+      setTranslatedText("")
+      return;
+    }
+
+    handleTranslate()
+  }, [debouncedQuery])
+
   return (
     <main className='mx-3 lg:mx-[4.5rem] my-10 lg:my-[5.7rem] text-lightGray'>
       <div className='flex justify-center mb-[3.3rem]'>
@@ -88,7 +116,8 @@ function App() {
           targetLang={targetLang}
           handleChangeTargetLang={handleChangeTargetLang}
           translatedText={translatedText}
-          handleSwitchLang={handleSwitchLang}/>
+          handleSwitchLang={handleSwitchLang}
+          isTranslating={isTranslating}/>
       </div>
     </main>
   )

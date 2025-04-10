@@ -2,6 +2,8 @@ import LanguageButton from "./LanguageButton";
 import LanguageDropdown from "./LanguagesDropdown";
 import HorizontalTopLeftMain from '../assets/Horizontal_top_left_main.svg';
 import AudioCopyControls from "./AudioCopyControls";
+import { DotWave } from 'ldrs/react'
+import 'ldrs/react/DotWave.css'
 
 interface translationOutputBoxProps {
     languages: { code: string, name: string}[],
@@ -9,6 +11,7 @@ interface translationOutputBoxProps {
     handleChangeTargetLang: (lang: string) => void,
     handleSwitchLang: () => void,
     translatedText: string,
+    isTranslating: boolean
 }
 
 export default function TranslationOutputBox({
@@ -16,7 +19,8 @@ export default function TranslationOutputBox({
     targetLang, 
     handleChangeTargetLang, 
     handleSwitchLang, 
-    translatedText
+    translatedText,
+    isTranslating
 }: translationOutputBoxProps) {
     return (
       <div className="border border-darkSlate rounded-3xl bg-blackOverlay p-[1.4rem] xl:flex-1">
@@ -44,7 +48,18 @@ export default function TranslationOutputBox({
           </button>
         </div>
         <hr className='my-[.9rem] text-darkSlate'/>
-        <div className="py-[.6rem] text-base font-bold w-full h-[12rem]">{translatedText}</div>
+        <div className="py-[.6rem] text-base font-bold w-full h-[12rem]">
+          {translatedText}
+          {isTranslating && 
+            <span className=" ms-2 -translate-y-[8px]">
+              <DotWave
+                size="35"
+                speed="1"
+                color="var(--color-lightGray)" 
+              />
+            </span>
+          }
+        </div>
         <AudioCopyControls style='w-fit' getText={() => { return translatedText }} />
       </div>
     )
