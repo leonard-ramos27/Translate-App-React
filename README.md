@@ -1,54 +1,54 @@
-# React + TypeScript + Vite
+<h1 align="center">Translate App using React, Typescript and Tailwind CSS</h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
+   Solution for a challenge <a href="https://devchallenges.io/challenge/translate-app" target="_blank">Translate app</a> from <a href="http://devchallenges.io" target="_blank">devChallenges.io</a>.
+</div>
 
-Currently, two official plugins are available:
+<div align="center">
+  <h3>
+    <a href="{https://your-demo-link.your-domain}">
+      Demo
+    </a>
+    <span> | </span>
+    <a href="https://github.com/leonard-ramos27/Translate-App-React.git">
+      Solution
+    </a>
+    <span> | </span>
+    <a href="https://devchallenges.io/challenge/translate-app">
+      Challenge
+    </a>
+  </h3>
+</div>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [Built with](#built-with)
+- [Features](#features)
+- [Author](#author)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Overview
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+![screenshot](./public/translate_app_screenshot.png)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+A responsive translation app that connects to a third-party API to translate text between different languages and uses debouncing for real-time update. This application/site was created as a submission to a [DevChallenges](https://devchallenges.io/challenges-dashboard) challenge. 
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Built with
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- [React](https://react.dev/)
+- [Typescript](https://www.typescriptlang.org/)
+- [Tailwind](https://tailwindcss.com/)
+
+## Features
+
+- Users are able to translate text of up to 500 characters.
+- Allows users to select from 5 different languages: English, French, spanish, Italian, German.
+- Users can switch the translating language and translated language.
+- Lets the user listen to the translating text and the translated text.
+- Lets the user copy the translating and the translated text.
+
+## Author
+
+- Website [leonard-ramos-dev.netlify.app](https://leonard-ramos-dev.netlify.app/)
+- GitHub [@leonard-ramos27](https://github.com/leonard-ramos27)
