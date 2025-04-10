@@ -18,6 +18,7 @@ export default function LanguageDropdown({
             <select 
                 name={id} 
                 id={id}
+                aria-label='Select a language'
                 className={`bg-transparent appearance-none pl-3 pr-5 cursor-pointer focus-visible:outline-none `}
                 value={ languages.some(lang => value === lang.code) ? value : ''}
                 onChange={(e) => onChange(e.target.value)}>

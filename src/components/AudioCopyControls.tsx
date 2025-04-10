@@ -34,11 +34,13 @@ export default function AudioCopyControls({ style, getText}: AudioCopyControlsPr
         <div className={`flex gap-2 relative ${style}`}>
           <button 
             onClick={handleAudio}
+            aria-label='Listen to text'
             className='border-2 border-slateGray text-slateGray p-[6px] rounded-xl cursor-pointer hover:scale-105 active:scale-95 transition'>
             <img src={SoundMaxFill} alt="" />
           </button>
           <button 
             onClick={handleCopy}
+            aria-label='Copy text to clipboard'
             className='border-2 border-slateGray text-slateGray p-[6px] rounded-xl cursor-pointer hover:scale-105 active:scale-95 transition'>
             <img src={Copy} alt="" />
           </button>

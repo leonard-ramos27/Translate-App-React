@@ -43,6 +43,7 @@ export default function TranslationOutputBox({
           )}
           <button 
             onClick={handleSwitchLang}
+            aria-label="Switch translating language and translated language"
             className="ms-auto border-2 border-slateGray p-[4px] rounded-xl lg:my-[2px] cursor-pointer hover:scale-105 active:scale-95 transition">
             <img src={HorizontalTopLeftMain} alt="" />
           </button>

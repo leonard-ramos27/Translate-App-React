@@ -74,6 +74,7 @@ export default function TranslationInputForm({
       <textarea 
         name="original-text" 
         id="original-text"
+        aria-label='Enter text to translate'
         defaultValue={defaultText}
         ref={textRef}
         className='py-[.6rem] text-base font-bold w-full h-[9rem] resize-none focus-visible:outline-none'
