@@ -50,7 +50,9 @@ function App() {
       if(API_URL) {
         setTimeout(async () => {
           const response = await axios.get(API_URL)
-          response.data.responseData.match && setTranslatedText(response.data.responseData.translatedText)
+          if(response.data.responseData.match) {
+            setTranslatedText(response.data.responseData.translatedText)
+          }
           setIsTranslating(false)
         }, 500)
       }
