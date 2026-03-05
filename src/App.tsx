@@ -108,18 +108,11 @@ function App() {
       <div className='flex flex-col xl:flex-row xl:justify-between gap-4 lg:gap-[0.8rem] xl:gap-[0.8rem]'>
         <TranslationInputForm 
           languages={languages}
-          sourceLang={sourceLang} 
-          defaultText={sourceText} 
-          handleUpdateSourceText={handleUpdateSourceText}
-          handleChangeSourceLang={handleChangeSourceLang} 
+          defaultText={sourceText}  
           handleTranslate={handleTranslate}/>
         <TranslationOutputBox 
           languages={languages}
-          targetLang={targetLang}
-          handleChangeTargetLang={handleChangeTargetLang}
-          translatedText={translatedText}
-          handleSwitchLang={handleSwitchLang}
-          isTranslating={isTranslating}/>
+          />
       </div>
     </main>
   )
