@@ -3,25 +3,23 @@ import LanguageButton from './LanguageButton'
 import LanguageDropdown from './LanguagesDropdown'
 import SortAlfa from '../assets/Sort_alfa.svg'
 import AudioCopyControls from './AudioCopyControls'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from "@/store/store";
+import { setOriginalText, setSourceLang } from '@/store/translateParamsSlice'
 
 interface translationInputFormProps {
   languages: { code: string, name: string}[],
-  sourceLang : string,
   defaultText: string,
-  handleUpdateSourceText: (text: string) => void,
-  handleChangeSourceLang: (lang: string) => void,
   handleTranslate: () => void,
 }
   
 export default function TranslationInputForm({
   languages, 
-  sourceLang, 
   defaultText, 
-  handleUpdateSourceText,
-  handleChangeSourceLang, 
   handleTranslate
 }: translationInputFormProps) {
-
+  const { originalText, sourceLang } = useSelector((state: RootState) => state.translateParams)
+  const dispatch = useDispatch()
   const textRef = useRef<HTMLTextAreaElement>(null)
   const [textLength, setTextLength] = useState(defaultText.length)
 
@@ -38,7 +36,7 @@ export default function TranslationInputForm({
   }
   
   const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      handleUpdateSourceText(e.target.value)
+      dispatch(setOriginalText(e.target.value))
       setTextLength(e.target.value.length)
   }
   
@@ -52,21 +50,21 @@ export default function TranslationInputForm({
           code="auto"
           checked={sourceLang == "auto"}
           text="Detect Language"
-          onChange={handleChangeSourceLang}/>
+          onChange={() => dispatch(setSourceLang("auto"))}/>
         {languages.slice(0, 2).map((lang) => (
           <LanguageButton 
             id={`btn-original-lang-${lang.code}`}
             code={lang.code}
             checked={sourceLang == lang.code}
             text={lang.name}
-            onChange={handleChangeSourceLang}
+            onChange={() => dispatch(setSourceLang(lang.code))}
             key={lang.code}/>
         ))}
         {languages.length > 2 && (
           <LanguageDropdown 
             id='source-language'
             value={sourceLang}
-            onChange={handleChangeSourceLang}
+            onChange={(lang) => dispatch(setSourceLang(lang))}
             languages={languages.slice(2)}/>
         )}
       </div>
@@ -75,7 +73,7 @@ export default function TranslationInputForm({
         name="original-text" 
         id="original-text"
         aria-label='Enter text to translate'
-        defaultValue={defaultText}
+        defaultValue={originalText}
         ref={textRef}
         className='py-[.6rem] text-base font-bold w-full h-[9rem] resize-none focus-visible:outline-none'
         onChange={handleChangeText}></textarea>
