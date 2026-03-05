@@ -4,24 +4,22 @@ import HorizontalTopLeftMain from '../assets/Horizontal_top_left_main.svg';
 import AudioCopyControls from "./AudioCopyControls";
 import { DotWave } from 'ldrs/react'
 import 'ldrs/react/DotWave.css'
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useTranslateTextQuery } from "@/store/translateApi";
+import { setSwitchLang, setTargetLang } from "@/store/translateParamsSlice";
 
 interface translationOutputBoxProps {
     languages: { code: string, name: string}[],
-    targetLang: string,
-    handleChangeTargetLang: (lang: string) => void,
-    handleSwitchLang: () => void,
-    translatedText: string,
-    isTranslating: boolean
 }
 
 export default function TranslationOutputBox({
     languages,
-    targetLang, 
-    handleChangeTargetLang, 
-    handleSwitchLang, 
-    translatedText,
-    isTranslating
 }: translationOutputBoxProps) {
+  const params = useSelector((state: RootState) => state.translateParams)
+  const { data, isFetching } = useTranslateTextQuery(params)
+  const dispatch = useDispatch()
+
     return (
       <div className="border border-darkSlate rounded-3xl bg-blackOverlay p-[1.4rem] xl:flex-1">
         <div className="flex flex-row flex-wrap gap-[12px]">
@@ -29,20 +27,20 @@ export default function TranslationOutputBox({
             <LanguageButton  
               id={`btn-translated-lang-${lang.code}`}
               code={lang.code}
-              checked={targetLang == lang.code}
+              checked={params.targetLang == lang.code}
               text={lang.name}
-              onChange={handleChangeTargetLang}
+              onChange={() => dispatch(setTargetLang(lang.code))}
               key={lang.code}/>
           ))}
           {languages.length > 2 && (
             <LanguageDropdown 
               id="translated-language"
-              value={targetLang}
-              onChange={handleChangeTargetLang}
+              value={params.targetLang}
+              onChange={(lang) => dispatch(setTargetLang(lang))}
               languages={languages.slice(2)}/>
           )}
           <button 
-            onClick={handleSwitchLang}
+            onClick={() => dispatch(setSwitchLang())}
             aria-label="Switch translating language and translated language"
             className="ms-auto border-2 border-slateGray p-[4px] rounded-xl lg:my-[2px] cursor-pointer hover:scale-105 active:scale-95 transition">
             <img src={HorizontalTopLeftMain} alt="" />
@@ -50,8 +48,7 @@ export default function TranslationOutputBox({
         </div>
         <hr className='my-[.9rem] text-darkSlate'/>
         <div className="py-[.6rem] text-base font-bold w-full h-[12rem]">
-          {translatedText}
-          {isTranslating && 
+          {isFetching ? (
             <span className=" ms-2 -translate-y-[8px]">
               <DotWave
                 size="35"
@@ -59,9 +56,14 @@ export default function TranslationOutputBox({
                 color="var(--color-lightGray)" 
               />
             </span>
+          ) : params.sourceLang === params.targetLang ? (
+            params.originalText
+          ) : data.responseData.match ? (
+            data.responseData.translatedText
+          ) : ''
           }
         </div>
-        <AudioCopyControls style='w-fit' getText={() => { return translatedText }} />
+        <AudioCopyControls style='w-fit' getText={() => { return data ? data.responseData.translatedText : "" }} />
       </div>
     )
   }
