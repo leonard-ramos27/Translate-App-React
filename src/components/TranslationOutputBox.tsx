@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useTranslateTextQuery } from "@/store/translateApi";
 import { setSwitchLang, setTargetLang } from "@/store/translateParamsSlice";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface translationOutputBoxProps {
     languages: { code: string, name: string}[],
@@ -16,8 +17,13 @@ interface translationOutputBoxProps {
 export default function TranslationOutputBox({
     languages,
 }: translationOutputBoxProps) {
-  const params = useSelector((state: RootState) => state.translateParams)
-  const { data, isFetching } = useTranslateTextQuery(params)
+  const { originalText, sourceLang, targetLang } = useSelector((state: RootState) => state.translateParams)
+  const debouncedText = useDebounce(originalText)
+  const { data, isFetching } = useTranslateTextQuery({
+    originalText: debouncedText,
+    sourceLang,
+    targetLang
+  })
   const dispatch = useDispatch()
 
     return (
@@ -27,7 +33,7 @@ export default function TranslationOutputBox({
             <LanguageButton  
               id={`btn-translated-lang-${lang.code}`}
               code={lang.code}
-              checked={params.targetLang == lang.code}
+              checked={targetLang == lang.code}
               text={lang.name}
               onChange={() => dispatch(setTargetLang(lang.code))}
               key={lang.code}/>
@@ -35,7 +41,7 @@ export default function TranslationOutputBox({
           {languages.length > 2 && (
             <LanguageDropdown 
               id="translated-language"
-              value={params.targetLang}
+              value={targetLang}
               onChange={(lang) => dispatch(setTargetLang(lang))}
               languages={languages.slice(2)}/>
           )}
@@ -56,8 +62,8 @@ export default function TranslationOutputBox({
                 color="var(--color-lightGray)" 
               />
             </span>
-          ) : params.sourceLang === params.targetLang ? (
-            params.originalText
+          ) : sourceLang === targetLang ? (
+            originalText
           ) : data.responseData.match ? (
             data.responseData.translatedText
           ) : ''
