@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import LanguageButton from './LanguageButton'
 import LanguageDropdown from './LanguagesDropdown'
 import SortAlfa from '../assets/Sort_alfa.svg'
@@ -9,23 +9,17 @@ import { setOriginalText, setSourceLang } from '@/store/translateParamsSlice'
 
 interface translationInputFormProps {
   languages: { code: string, name: string}[],
-  defaultText: string,
   handleTranslate: () => void,
 }
   
 export default function TranslationInputForm({
   languages, 
-  defaultText, 
   handleTranslate
 }: translationInputFormProps) {
   const { originalText, sourceLang } = useSelector((state: RootState) => state.translateParams)
   const dispatch = useDispatch()
   const textRef = useRef<HTMLTextAreaElement>(null)
-  const [textLength, setTextLength] = useState(defaultText.length)
-
-  useEffect(()=>{
-      if(textRef.current) textRef.current.value = defaultText
-  }, [defaultText])
+  const [textLength, setTextLength] = useState(originalText.length)
   
   const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault()
@@ -73,7 +67,7 @@ export default function TranslationInputForm({
         name="original-text" 
         id="original-text"
         aria-label='Enter text to translate'
-        defaultValue={originalText}
+        value={originalText}
         ref={textRef}
         className='py-[.6rem] text-base font-bold w-full h-[9rem] resize-none focus-visible:outline-none'
         onChange={handleChangeText}></textarea>
