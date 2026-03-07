@@ -46,7 +46,7 @@ export default function TranslationOutputBox({
               languages={languages.slice(2)}/>
           )}
           <button 
-            onClick={() => dispatch(setSwitchLang())}
+            onClick={() => dispatch(setSwitchLang(data.responseData.translatedText ? data.responseData.translatedText : ""))}
             aria-label="Switch translating language and translated language"
             className="ms-auto border-2 border-slateGray p-[4px] rounded-xl lg:my-[2px] cursor-pointer hover:scale-105 active:scale-95 transition">
             <img src={HorizontalTopLeftMain} alt="" />

@@ -26,10 +26,11 @@ export const translateParamsSlice = createSlice({
     setTargetLang: (state, action: PayloadAction<string>) => {
       state.targetLang = action.payload
     },
-    setSwitchLang: (state) => {
+    setSwitchLang: (state, action:PayloadAction<string>) => {
       const sourceLang = state.sourceLang
       state.sourceLang = state.targetLang
       state.targetLang = sourceLang
+      state.originalText = action.payload
     }
   },
 })
