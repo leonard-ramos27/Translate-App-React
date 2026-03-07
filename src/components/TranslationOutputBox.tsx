@@ -18,11 +18,13 @@ export default function TranslationOutputBox({
     languages,
 }: translationOutputBoxProps) {
   const { originalText, sourceLang, targetLang } = useSelector((state: RootState) => state.translateParams)
-  const debouncedText = useDebounce(originalText)
+  const debouncedText = useDebounce(originalText.slice(0, 500))
   const { data, isFetching } = useTranslateTextQuery({
     originalText: debouncedText,
     sourceLang,
     targetLang
+  }, {
+    skip: originalText.length > 500,
   })
   const dispatch = useDispatch()
 

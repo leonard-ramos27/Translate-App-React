@@ -19,7 +19,7 @@ export default function TranslationInputForm({
   const { originalText, sourceLang } = useSelector((state: RootState) => state.translateParams)
   const dispatch = useDispatch()
   const textRef = useRef<HTMLTextAreaElement>(null)
-  const [textLength, setTextLength] = useState(originalText.length)
+  const [isTextOverLimit, setIsTextOverLimit] = useState(originalText.length > 500)
   
   const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault()
@@ -30,8 +30,13 @@ export default function TranslationInputForm({
   }
   
   const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      dispatch(setOriginalText(e.target.value))
-      setTextLength(e.target.value.length)
+      const value = e.target.value
+      dispatch(setOriginalText(value))
+      if(value.length > 500){
+        setIsTextOverLimit(true)
+      } else {
+        setIsTextOverLimit(false)
+      }
   }
   
   return(
@@ -71,10 +76,12 @@ export default function TranslationInputForm({
         ref={textRef}
         className='py-[.6rem] text-base font-bold w-full h-[9rem] resize-none focus-visible:outline-none'
         onChange={handleChangeText}></textarea>
-      <div className=' text-end text-[.8rem]'>{textLength}/500</div>
-      {textLength > 500 && (
-        <p>Text can only be up to 500 characters</p>
-      )}
+      <div className='flex justify-end items-center gap-4'>
+        { isTextOverLimit && (
+          <p className='flex-1'>Text can only be up to 500 characters.</p>
+        )}
+        <div className=' text-end text-[.8rem]'>{originalText.length}/500</div>
+      </div>
       <div className='flex justify-between items-center mt-[0.6rem]'>
         <AudioCopyControls 
           style='self-end' 
