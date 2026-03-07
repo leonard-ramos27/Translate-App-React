@@ -27,10 +27,19 @@ export const translateParamsSlice = createSlice({
       state.targetLang = action.payload
     },
     setSwitchLang: (state, action:PayloadAction<string>) => {
-      const sourceLang = state.sourceLang
-      state.sourceLang = state.targetLang
-      state.targetLang = sourceLang
+      const {sourceLang, targetLang} = state
+      // Update original text
       state.originalText = action.payload
+      // Update source language
+      state.sourceLang = targetLang
+      // Update target language
+      if(sourceLang === "auto"){
+        // Handle auto detected case
+        state.targetLang = targetLang === "en" ? "fr" : "en"
+      } else {
+        // Swap normally
+        state.targetLang = sourceLang
+      }
     }
   },
 })
