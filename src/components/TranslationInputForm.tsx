@@ -6,27 +6,42 @@ import AudioCopyControls from './AudioCopyControls'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from "@/store/store";
 import { setOriginalText, setSourceLang } from '@/store/translateParamsSlice'
+import { useTranslateTextQuery } from '@/store/translateApi'
+import { useDetectLanguage } from '@/hooks/useDetectLanguage'
 
 interface translationInputFormProps {
   languages: { code: string, name: string}[],
-  handleTranslate: () => void,
 }
   
 export default function TranslationInputForm({
   languages, 
-  handleTranslate
 }: translationInputFormProps) {
-  const { originalText, sourceLang } = useSelector((state: RootState) => state.translateParams)
+  const { originalText, sourceLang, targetLang } = useSelector((state: RootState) => state.translateParams)
   const dispatch = useDispatch()
+  const detectedLang = useDetectLanguage(originalText,sourceLang)
+  const { refetch } = useTranslateTextQuery({
+    originalText,
+    sourceLang: detectedLang,
+    targetLang
+  },{
+    skip: originalText.length > 500,
+  })
   const textRef = useRef<HTMLTextAreaElement>(null)
   const [isTextOverLimit, setIsTextOverLimit] = useState(originalText.length > 500)
   
-  const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault()
-      const textToTranslate = textRef.current?.value.trim()
-      !textToTranslate ? console.log("Text cannot be empty") 
-      : textToTranslate.length > 500 ? console.log("Text cannot be more than 500 characters")
-      : handleTranslate()
+  
+  const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault()
+    const value = textRef.current?.value
+    if(value){
+      dispatch(setOriginalText(value))
+      if(value.length > 500){
+        setIsTextOverLimit(true)
+      } else {
+        setIsTextOverLimit(false)
+        refetch()
+      }
+    }
   }
   
   const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
