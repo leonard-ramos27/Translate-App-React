@@ -9,6 +9,7 @@ import { RootState } from "@/store/store";
 import { useTranslateTextQuery } from "@/store/translateApi";
 import { setSwitchLang, setTargetLang } from "@/store/translateParamsSlice";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useDetectLanguage } from "@/hooks/useDetectLanguage";
 
 interface translationOutputBoxProps {
     languages: { code: string, name: string}[],
@@ -19,9 +20,10 @@ export default function TranslationOutputBox({
 }: translationOutputBoxProps) {
   const { originalText, sourceLang, targetLang } = useSelector((state: RootState) => state.translateParams)
   const debouncedText = useDebounce(originalText.slice(0, 500))
+  const detectedLang = useDetectLanguage(debouncedText, sourceLang)
   const { data, isFetching } = useTranslateTextQuery({
     originalText: debouncedText,
-    sourceLang,
+    sourceLang: detectedLang,
     targetLang
   }, {
     skip: originalText.length > 500,
