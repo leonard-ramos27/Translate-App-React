@@ -3,11 +3,11 @@ import LanguageButton from './LanguageButton'
 import LanguageDropdown from './LanguagesDropdown'
 import SortAlfa from '../assets/Sort_alfa.svg'
 import AudioCopyControls from './AudioCopyControls'
-import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from "@/store/store";
 import { setOriginalText, setSourceLang } from '@/store/translateParamsSlice'
 import { useTranslateTextQuery } from '@/store/translateApi'
 import { useDetectLanguage } from '@/hooks/useDetectLanguage'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 
 interface translationInputFormProps {
   languages: { code: string, name: string}[],
@@ -16,8 +16,8 @@ interface translationInputFormProps {
 export default function TranslationInputForm({
   languages, 
 }: translationInputFormProps) {
-  const { originalText, sourceLang, targetLang } = useSelector((state: RootState) => state.translateParams)
-  const dispatch = useDispatch()
+  const { originalText, sourceLang, targetLang } = useAppSelector((state: RootState) => state.translateParams)
+  const dispatch = useAppDispatch()
   const detectedLang = useDetectLanguage(originalText,sourceLang)
   const { refetch } = useTranslateTextQuery({
     originalText,

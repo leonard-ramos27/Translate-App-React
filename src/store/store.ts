@@ -1,16 +1,25 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { translateParamsSlice } from './translateParamsSlice'
 import { translateApi } from './translateApi'
 
-export const store = configureStore({
-  reducer: {
-    translateParams: translateParamsSlice.reducer,
-    [translateApi.reducerPath]: translateApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) => 
-    getDefaultMiddleware().concat(translateApi.middleware)
+const rootReducer = combineReducers({
+  translateParams: translateParamsSlice.reducer,
+  [translateApi.reducerPath]: translateApi.reducer,
 })
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+
+export function setupStore(preloadedState?: PreloadedState){
+  return configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => 
+    getDefaultMiddleware().concat(translateApi.middleware),
+    preloadedState
+  })
+}
+
+export const store = setupStore()
+
+export type PreloadedState = Parameters<typeof rootReducer>[0]
+export type RootState = ReturnType<typeof rootReducer>
+export type AppStore = ReturnType<typeof setupStore>
+export type AppDispatch = AppStore['dispatch']
