@@ -4,12 +4,12 @@ import HorizontalTopLeftMain from '../assets/Horizontal_top_left_main.svg';
 import AudioCopyControls from "./AudioCopyControls";
 import { DotWave } from 'ldrs/react'
 import 'ldrs/react/DotWave.css'
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useTranslateTextQuery } from "@/store/translateApi";
 import { setSwitchLang, setTargetLang } from "@/store/translateParamsSlice";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useDetectLanguage } from "@/hooks/useDetectLanguage";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 interface translationOutputBoxProps {
     languages: { code: string, name: string}[],
@@ -18,7 +18,7 @@ interface translationOutputBoxProps {
 export default function TranslationOutputBox({
     languages,
 }: translationOutputBoxProps) {
-  const { originalText, sourceLang, targetLang } = useSelector((state: RootState) => state.translateParams)
+  const { originalText, sourceLang, targetLang } = useAppSelector((state: RootState) => state.translateParams)
   const debouncedText = useDebounce(originalText.slice(0, 500))
   const detectedLang = useDetectLanguage(debouncedText, sourceLang)
   const { data, isFetching } = useTranslateTextQuery({
@@ -28,7 +28,7 @@ export default function TranslationOutputBox({
   }, {
     skip: originalText.length > 500,
   })
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
     return (
       <div className="border border-darkSlate rounded-3xl bg-blackOverlay p-[1.4rem] xl:flex-1">
@@ -50,8 +50,8 @@ export default function TranslationOutputBox({
               languages={languages.slice(2)}/>
           )}
           <button 
-            onClick={() => dispatch(setSwitchLang(data.responseData.translatedText ? data.responseData.translatedText : ""))}
-            aria-label="Switch translating language and translated language"
+            onClick={() => dispatch(setSwitchLang(data?.responseData?.translatedText ?? ""))}
+            aria-label="Switch Languages"
             className="ms-auto border-2 border-slateGray p-[4px] rounded-xl lg:my-[2px] cursor-pointer hover:scale-105 active:scale-95 transition">
             <img src={HorizontalTopLeftMain} alt="" />
           </button>
