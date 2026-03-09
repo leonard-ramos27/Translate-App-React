@@ -1,45 +1,57 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import LanguageButton from './LanguageButton'
 import LanguageDropdown from './LanguagesDropdown'
 import SortAlfa from '../assets/Sort_alfa.svg'
 import AudioCopyControls from './AudioCopyControls'
+import { RootState } from "@/store/store";
+import { setOriginalText, setSourceLang } from '@/store/translateParamsSlice'
+import { useTranslateTextQuery } from '@/store/translateApi'
+import { useDetectLanguage } from '@/hooks/useDetectLanguage'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 
 interface translationInputFormProps {
   languages: { code: string, name: string}[],
-  sourceLang : string,
-  defaultText: string,
-  handleUpdateSourceText: (text: string) => void,
-  handleChangeSourceLang: (lang: string) => void,
-  handleTranslate: () => void,
 }
   
 export default function TranslationInputForm({
   languages, 
-  sourceLang, 
-  defaultText, 
-  handleUpdateSourceText,
-  handleChangeSourceLang, 
-  handleTranslate
 }: translationInputFormProps) {
-
+  const { originalText, sourceLang, targetLang } = useAppSelector((state: RootState) => state.translateParams)
+  const dispatch = useAppDispatch()
+  const detectedLang = useDetectLanguage(originalText,sourceLang)
+  const { refetch } = useTranslateTextQuery({
+    originalText,
+    sourceLang: detectedLang,
+    targetLang
+  },{
+    skip: originalText.length > 500,
+  })
   const textRef = useRef<HTMLTextAreaElement>(null)
-  const [textLength, setTextLength] = useState(defaultText.length)
-
-  useEffect(()=>{
-      if(textRef.current) textRef.current.value = defaultText
-  }, [defaultText])
+  const [isTextOverLimit, setIsTextOverLimit] = useState(originalText.length > 500)
   
-  const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault()
-      const textToTranslate = textRef.current?.value.trim()
-      !textToTranslate ? console.log("Text cannot be empty") 
-      : textToTranslate.length > 500 ? console.log("Text cannot be more than 500 characters")
-      : handleTranslate()
+  
+  const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault()
+    const value = textRef.current?.value
+    if(value){
+      dispatch(setOriginalText(value))
+      if(value.length > 500){
+        setIsTextOverLimit(true)
+      } else {
+        setIsTextOverLimit(false)
+        refetch()
+      }
+    }
   }
   
   const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      handleUpdateSourceText(e.target.value)
-      setTextLength(e.target.value.length)
+      const value = e.target.value
+      dispatch(setOriginalText(value))
+      if(value.length > 500){
+        setIsTextOverLimit(true)
+      } else {
+        setIsTextOverLimit(false)
+      }
   }
   
   return(
@@ -52,21 +64,21 @@ export default function TranslationInputForm({
           code="auto"
           checked={sourceLang == "auto"}
           text="Detect Language"
-          onChange={handleChangeSourceLang}/>
+          onChange={() => dispatch(setSourceLang("auto"))}/>
         {languages.slice(0, 2).map((lang) => (
           <LanguageButton 
             id={`btn-original-lang-${lang.code}`}
             code={lang.code}
             checked={sourceLang == lang.code}
             text={lang.name}
-            onChange={handleChangeSourceLang}
+            onChange={() => dispatch(setSourceLang(lang.code))}
             key={lang.code}/>
         ))}
         {languages.length > 2 && (
           <LanguageDropdown 
             id='source-language'
             value={sourceLang}
-            onChange={handleChangeSourceLang}
+            onChange={(lang) => dispatch(setSourceLang(lang))}
             languages={languages.slice(2)}/>
         )}
       </div>
@@ -75,14 +87,17 @@ export default function TranslationInputForm({
         name="original-text" 
         id="original-text"
         aria-label='Enter text to translate'
-        defaultValue={defaultText}
+        value={originalText}
         ref={textRef}
+        data-testid="original-text"
         className='py-[.6rem] text-base font-bold w-full h-[9rem] resize-none focus-visible:outline-none'
         onChange={handleChangeText}></textarea>
-      <div className=' text-end text-[.8rem]'>{textLength}/500</div>
-      {textLength > 500 && (
-        <p>Text can only be up to 500 characters</p>
-      )}
+      <div className='flex justify-end items-center gap-4'>
+        { isTextOverLimit && (
+          <p className='flex-1'>Text can only be up to 500 characters.</p>
+        )}
+        <div className=' text-end text-[.8rem]'>{originalText.length}/500</div>
+      </div>
       <div className='flex justify-between items-center mt-[0.6rem]'>
         <AudioCopyControls 
           style='self-end' 

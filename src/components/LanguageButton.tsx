@@ -3,7 +3,7 @@ interface LanguageButtonProps {
     code: string,
     checked: boolean,
     text: string,
-    onChange: (lang: string) => void
+    onChange: () => void
 }
 
 export default function LanguageButton({
@@ -23,7 +23,7 @@ export default function LanguageButton({
               name={id}
               value={code}
               checked={checked}
-              onChange={(e) => onChange(e.target.value)} 
+              onChange={onChange} 
               className="hidden"/>
             <span>{text}</span>
         </label>
