@@ -89,6 +89,7 @@ export default function TranslationInputForm({
         aria-label='Enter text to translate'
         value={originalText}
         ref={textRef}
+        data-testid="original-text"
         className='py-[.6rem] text-base font-bold w-full h-[9rem] resize-none focus-visible:outline-none'
         onChange={handleChangeText}></textarea>
       <div className='flex justify-end items-center gap-4'>
